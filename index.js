@@ -41,14 +41,6 @@ async function startServer() {
   const PORT = 3000;
   server.listen(PORT, () => {
     console.log(`Server running at http://localhost:${PORT}/`);
-    
-    if (isDeno) {
-      console.log(`\nRun with required permissions:`);
-      console.log(`deno run --allow-read=./local-file.txt --allow-net=example.com,0.0.0.0:3000 index.js`);
-    } else {
-      console.log(`\nRun with required permissions:`);
-      console.log(`node --permission --allow-fs-read=. index.js`);
-    }
   });
 }
 
