@@ -1,22 +1,15 @@
-// A simple proxy server that demonstrates permissions in Node.js and Deno
-// Will fail if permissions aren't explicitly granted
-
-// Detect environment
 const isDeno = typeof Deno !== 'undefined';
 
-// Main function to start the server
 async function startServer() {
   let http, fs, https;
   
   if (isDeno) {
-    // Deno imports
     http = await import("node:http");
     https = await import("node:https");
     fs = {
       readFileSync: (path) => new TextDecoder().decode(Deno.readFileSync(path))
     };
   } else {
-    // Node.js imports
     http = require('http');
     https = require('https');
     fs = require('fs');
@@ -24,13 +17,10 @@ async function startServer() {
 
   // Create a simple HTTP server
   const server = http.createServer(async (req, res) => {
-    // Read from filesystem - will fail without proper permissions
     const fileContent = fs.readFileSync('./local-file.txt');
     
-    // Fetch from example.com - will fail without proper permissions
     const exampleContent = await fetchUrl('https://example.com', https);
     
-    // If we get here, both operations succeeded
     res.writeHead(200, { 'Content-Type': 'text/plain' });
     res.write(`File content:\n${fileContent}\n\n`);
     res.write(`Example.com content (first 150 chars):\n${exampleContent.slice(0, 150)}...\n`);
